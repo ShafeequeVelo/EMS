@@ -19,8 +19,6 @@
 		</tr>
 	</table>
 	
-	<a href="CreateTasks.jsp">CT</a>
-	
 </form>
 </body>
 </html>

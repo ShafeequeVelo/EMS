@@ -159,10 +159,12 @@ String empDesg = getDesignations.determineEmpDesignation(empID);
 				else if(empDesg != null && empDesg.equals("MANAGER")){
 				%>
 				<input type="submit" name="submit" value="Add Employee" >
+				<input type="submit" name="submit" value="Add Tasks" >
 				<%} %>
 				</td>
 			</tr>
 		</table>
 	</form>
+
 </body>
 </html>
