@@ -47,17 +47,19 @@ public class TaskOperations {
 		
 	}
 	
-	public List<TaskPojo> getTaskList(){
+	public List<TaskPojo> getTaskList(String mgrID){
 		
 	 	 Connection connection = databaseConnection.getConnection();
 	 	 
 	 	 
 	 	 List<TaskPojo> taskList = new ArrayList<TaskPojo>();
 	 	 
-	 	 String query = "SELECT * FROM Tasks";
+	 	 String query = "SELECT * FROM Tasks WHERE TASKASSIGNER = ? and TASKSTATUS = 'OPEN' and TASKASSIGNEE = 'NOT ASSIGNED'";
 	 	 
 	 	 try {
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			
+			preparedStatement.setString(1, mgrID);
 			
 			ResultSet resultSet = preparedStatement.executeQuery();
 			
@@ -84,6 +86,48 @@ public class TaskOperations {
 		return taskList;
 	}
 	
+	
+	public List<TaskPojo> getAssignedTaskList(String mgrID){
+		
+	 	 Connection connection = databaseConnection.getConnection();
+	 	 
+	 	 
+	 	 List<TaskPojo> assignedTaskList = new ArrayList<TaskPojo>();
+	 	 
+	 	 String query = "SELECT * FROM Tasks WHERE TASKASSIGNER = ? and TASKASSIGNEE != 'NOT ASSIGNED'";
+	 	 
+	 	 try {
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			
+			preparedStatement.setString(1, mgrID);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next()) {
+
+				TaskPojo taskPojo = new TaskPojo();
+				
+				taskPojo.setTask(resultSet.getString("Task"));
+				taskPojo.setTaskDesc(resultSet.getString("TaskDesc"));
+				taskPojo.setStatus(resultSet.getString("TaskStatus"));
+				taskPojo.setAssignee(resultSet.getString("TaskAssignee"));
+				taskPojo.setAssigner(resultSet.getString("TaskAssigner"));
+				taskPojo.setTaskID(resultSet.getString("TaskID"));
+				
+				assignedTaskList.add(taskPojo);
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return assignedTaskList;
+	}
+	
+	
+	
 	public int updateTask(TaskPojo taskPojo){
 		
 		Connection connection = databaseConnection.getConnection();
@@ -94,6 +138,93 @@ public class TaskOperations {
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			
 			preparedStatement.setString(1, taskPojo.getAssignee());
+			preparedStatement.setString(2, taskPojo.getTaskID());
+			
+			int i = preparedStatement.executeUpdate();
+			if(i > 0) {
+				return i;
+			}
+					
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return 0;
+		
+	}
+	
+	public List<TaskPojo> getTaskForEmp(String empID){
+		
+	 	 Connection connection = databaseConnection.getConnection();
+	 	 
+	 	 
+	 	 List<TaskPojo> tasksForEmp = new ArrayList<TaskPojo>();
+	 	 
+	 	 RegistrationPojo registrationPojo = new RegistrationPojo();
+	 	 
+	 	String query1 = "SELECT fName FROM Employee WHERE empID = ?";
+	 	
+	 	try {
+			PreparedStatement preparedStatement1 = connection.prepareStatement(query1);
+			
+			 preparedStatement1.setString(1, empID);
+			 
+			 ResultSet resultSet = preparedStatement1.executeQuery();
+			
+			if(resultSet.next()) {
+				registrationPojo.setfName(resultSet.getString("fName"));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 	 
+	 	 String query = "SELECT * FROM Tasks WHERE TASKASSIGNEE = ?";
+	 	 
+	 	 try {
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			
+			preparedStatement.setString(1, registrationPojo.getfName());
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next()) {
+
+				TaskPojo taskPojo = new TaskPojo();
+				
+				taskPojo.setTask(resultSet.getString("Task"));
+				taskPojo.setTaskDesc(resultSet.getString("TaskDesc"));
+				taskPojo.setStatus(resultSet.getString("TaskStatus"));
+				taskPojo.setAssignee(resultSet.getString("TaskAssignee"));
+				taskPojo.setAssigner(resultSet.getString("TaskAssigner"));
+				taskPojo.setTaskID(resultSet.getString("TaskID"));
+				
+				tasksForEmp.add(taskPojo);
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return tasksForEmp;
+	}
+	
+	
+	public int updateTaskForEmp(TaskPojo taskPojo){
+		
+		Connection connection = databaseConnection.getConnection();
+		
+		String query = "UPDATE TASKS SET taskStatus=? WHERE taskid =?";
+		
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			
+			preparedStatement.setString(1, taskPojo.getStatus());
 			preparedStatement.setString(2, taskPojo.getTaskID());
 			
 			int i = preparedStatement.executeUpdate();

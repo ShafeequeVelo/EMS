@@ -129,6 +129,9 @@ else{
 			out.println("</tr>");
 		}
 		%>
+		
 	</table>
+	<form action="ControllerServlet" method="post"> 
+	<input type="submit" name="submit" value="Logout"> </form>
 </body>
 </html>

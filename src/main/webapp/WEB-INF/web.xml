@@ -119,4 +119,34 @@
     <servlet-name>UpdateTaskServlet</servlet-name>
     <url-pattern>/UpdateTaskServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ListTasksServlet</display-name>
+    <servlet-name>ListTasksServlet</servlet-name>
+    <servlet-class>com.velociter.ems.ListTasksServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ListTasksServlet</servlet-name>
+    <url-pattern>/ListTasksServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ShowTasksServlet</display-name>
+    <servlet-name>ShowTasksServlet</servlet-name>
+    <servlet-class>com.velociter.ems.ShowTasksServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowTasksServlet</servlet-name>
+    <url-pattern>/ShowTasksServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>UpdateTaskStatusServlet</display-name>
+    <servlet-name>UpdateTaskStatusServlet</servlet-name>
+    <servlet-class>com.velociter.ems.UpdateTaskStatusServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateTaskStatusServlet</servlet-name>
+    <url-pattern>/UpdateTaskStatusServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

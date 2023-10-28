@@ -47,12 +47,10 @@ public class UpdateTaskServlet extends HttpServlet {
 
 		taskPojo.setTaskID(request.getParameter("taskid"));
 		taskPojo.setAssignee(request.getParameter("assignee"));
-		System.out.println(taskPojo.getTaskID());
-		System.out.println(taskPojo.getAssignee());
 		TaskOperations taskOperations = new TaskOperations();
 		int i = taskOperations.updateTask(taskPojo);
 		if (0 < i) {
-			System.out.println("success");
+			
 			request.getRequestDispatcher("ControllerServlet?submit=UpdateTaskServlet").forward(request, response);
 
 		} else {

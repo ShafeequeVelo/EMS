@@ -74,6 +74,10 @@ public class ControllerServlet extends HttpServlet {
 
 		// ????
 		else if (submit != null && submit.equals("Add Tasks")) {
+			request.getRequestDispatcher("ListTasksServlet").forward(request, response);
+		}
+
+		else if (submit != null && submit.equals("ListTasksServlet")) {
 			request.getRequestDispatcher("CreateTasks.jsp").forward(request, response);
 		}
 
@@ -96,15 +100,41 @@ public class ControllerServlet extends HttpServlet {
 		}
 
 		else if (submit != null && submit.equals("CreateTaskServlet")) {
-			request.getRequestDispatcher("CreateTasks.jsp").forward(request, response);
+			request.getRequestDispatcher("ListTasksServlet").forward(request, response);
 		}
 
 		else if (submit != null && submit.equals("updateTask")) {
 			request.getRequestDispatcher("UpdateTaskServlet").forward(request, response);
 		}
 
+		// forwarding request to ListTasksServlet
 		else if (submit != null && submit.equals("UpdateTaskServlet")) {
-			request.getRequestDispatcher("CreateTaskServlet").forward(request, response);
+			request.getRequestDispatcher("ListTasksServlet").forward(request, response);
+		}
+
+		// To Change
+		else if (submit != null && submit.equals("BackFromTask")) {
+			request.getRequestDispatcher(welcomeJSP).forward(request, response);
+		}
+
+		// forwarding request to ShowTasksServlet
+		else if (submit != null && submit.equals("Show Tasks")) {
+			request.getRequestDispatcher("ShowTasksServlet").forward(request, response);
+		}
+
+		// forwarding request to ShowTasks.jsp
+		else if (submit != null && submit.equals("ShowTasksServlet")) {
+			request.getRequestDispatcher("ShowTasks.jsp").forward(request, response);
+		}
+
+		// forwarding request to UpdateTaskStatusServlet
+		else if (submit != null && submit.equals("updateTaskForEmp")) {
+			request.getRequestDispatcher("UpdateTaskStatusServlet").forward(request, response);
+		}
+
+		// forwarding request to ShowTasks.jsp
+		else if (submit != null && submit.equals("UpdateTaskStatusServlet")) {
+			request.getRequestDispatcher("ShowTasksServlet").forward(request, response);
 		}
 
 		// redirecting to LogoutServlet

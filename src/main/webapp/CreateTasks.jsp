@@ -9,7 +9,8 @@
 
 <%
 List<TaskPojo> taskList = new ArrayList<TaskPojo>();
-TaskOperations taskOp = new TaskOperations();
+List<TaskPojo> assignedTaskList = new ArrayList<TaskPojo>();
+//TaskOperations taskOp = new TaskOperations();
 GetDesignations getDesignations = new GetDesignations();
 String empID = (String) session.getAttribute("empID");
 List<RegistrationPojo> assigneeList = getDesignations.getEmpForMgr(empID);
@@ -43,9 +44,12 @@ List<RegistrationPojo> assigneeList = getDesignations.getEmpForMgr(empID);
 	</form>
 	<br>
 	<br>
+	
+	<h4>Task List</h4>
 
 	<%
-	taskList = taskOp.getTaskList();
+	
+	taskList = (List<TaskPojo>)request.getAttribute("taskList");
 	if (taskList == null) {
 		out.println("Zero number of tasks available");
 	} else {
@@ -104,7 +108,67 @@ List<RegistrationPojo> assigneeList = getDesignations.getEmpForMgr(empID);
 	<%
 	}
 	%>
+	
+	<h4>Assigned Task List</h4>
+	
+	<%
+	
+	assignedTaskList = (List<TaskPojo>)request.getAttribute("assignedTaskList");
+	if (assignedTaskList == null) {
+		out.println("Zero number of tasks available");
+	} else {
+	%>
+	<table border="1">
+		<tr>
+			<td>Task</td>
+			<td>Task Description</td>
+			<td>Assigner</td>
+			<td>Task Status</td>
+			<td>Assignee</td>
+		</tr>
+		<%
+		for (TaskPojo taskPojo : assignedTaskList) {
 
+			out.println("<form action='ControllerServlet' method='post'>");
+			out.println("<tr>");
+			out.println("<td>");
+			out.println(taskPojo.getTask());
+			out.println("</td>");
+
+			out.println("<td>");
+			out.println(taskPojo.getTaskDesc());
+			out.println("</td>");
+
+			out.println("<td>");
+			out.println(taskPojo.getAssigner());
+			out.println("</td>");
+
+			out.println("<td>");
+			out.println(taskPojo.getStatus());
+			out.println("</td>");
+			
+			out.println("<td>");
+			out.println(taskPojo.getAssignee());
+			out.println("</td>");
+		out.println("</tr>");
+		}
+		%>
+		</form>
+		
+	</table>
+	<form action="ControllerServlet" method="post">
+	<input type="submit" name="submit" value="Logout"> </form>
+	<%
+	}
+	%>
+	
+	<!--  
+	<form action="ControllerServlet" method="post">
+	<table><tr><td>
+	<input type="submit" name="submit" value="BackFromTask">
+	</td></tr>
+	</table>
+	</form> -->
 
 </body>
 </html>
