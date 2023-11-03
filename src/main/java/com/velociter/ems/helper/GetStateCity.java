@@ -34,7 +34,7 @@ public class GetStateCity {
 
              while (rs.next()) {
 
-                  state.setStateID(rs.getString("state_id"));
+//                  state.setStateID(rs.getString("state_id"));
 
                   state.setStateName(rs.getString("state_name"));
 
@@ -89,7 +89,7 @@ public class GetStateCity {
 
 			while (rs.next()) {
 
-				city.setStateID(rs.getString("city_id"));
+//				city.setStateID(rs.getString("city_id"));
 
 				city.setCityName(rs.getString("city_name"));
 				

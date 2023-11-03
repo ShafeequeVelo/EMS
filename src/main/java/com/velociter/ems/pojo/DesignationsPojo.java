@@ -5,6 +5,7 @@ public class DesignationsPojo {
 	private String designation_ID;
 	private String designation_Name;
 	private int employee_desigID;
+	
 	public String getDesignation_ID() {
 		return designation_ID;
 	}

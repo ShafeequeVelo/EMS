@@ -13,6 +13,28 @@ public class RegistrationPojo {
 	private String password = null;
 	private String empID = null;
 	private String msg = null;
+	private String departmentID = null;
+	private String managerID = null;
+	private String roleID = null;
+	
+	public String getDepartmentID() {
+		return departmentID;
+	}
+	public void setDepartmentID(String departmentID) {
+		this.departmentID = departmentID;
+	}
+	public String getManagerID() {
+		return managerID;
+	}
+	public void setManagerID(String managerID) {
+		this.managerID = managerID;
+	}
+	public String getRoleID() {
+		return roleID;
+	}
+	public void setRoleID(String roleID) {
+		this.roleID = roleID;
+	}
 	
 	
 	public String getMsg() {

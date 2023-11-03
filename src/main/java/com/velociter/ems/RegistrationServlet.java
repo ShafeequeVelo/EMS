@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.velociter.ems.helper.DatabaseConnection;
+import com.velociter.ems.helper.RoleOperation;
+import com.velociter.ems.helper.UUIDGenerator;
 import com.velociter.ems.pojo.*;
 
 /**
@@ -20,31 +22,37 @@ import com.velociter.ems.pojo.*;
  */
 public class RegistrationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	//public String registerServletSubmit = "Register";       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public RegistrationServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	// public String registerServletSubmit = "Register";
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public RegistrationServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-		
 		RegistrationPojo rp = new RegistrationPojo();
-		
+
+		UUIDGenerator uuid = new UUIDGenerator();
+
 		rp.setfName(request.getParameter("fName"));
 		rp.setlName(request.getParameter("lName"));
 		rp.setEmpID(request.getParameter("empid"));
@@ -54,28 +62,37 @@ public class RegistrationServlet extends HttpServlet {
 		rp.setEmail(request.getParameter("email"));
 		rp.setuName(request.getParameter("uName"));
 		rp.setPassword(request.getParameter("password"));
-		
+		rp.setDepartmentID(request.getParameter("DepartmentID"));
+		rp.setRoleID(request.getParameter("RoleID"));
+		rp.setManagerID(request.getParameter("ManagerID"));
+
 		AddressPojo addressPojo = new AddressPojo();
-		addressPojo.setAddress1(request.getParameter("address1"));
-		addressPojo.setAddress2(request.getParameter("address2"));
-		addressPojo.setAddress3(request.getParameter("address3"));
-		addressPojo.setCity(request.getParameter("city"));
-		addressPojo.setZipCode(request.getParameter("zipcode"));
-		addressPojo.setState(request.getParameter("state"));
-		addressPojo.setCountry(request.getParameter("country"));
-		
-		DatabaseConnection dbConnection = new DatabaseConnection();		
+
+		String address = request.getParameter("address1").toString() + " " + request.getParameter("address2").toString()
+				+ " " + request.getParameter("address3").toString();
+
+		addressPojo.setCity(request.getParameter("City"));
+		addressPojo.setZipCode(request.getParameter("Zipcode"));
+		addressPojo.setState(request.getParameter("State"));
+		addressPojo.setCountry(request.getParameter("Country"));
+
+		String query = "INSERT INTO employee (fname, lname, EmpID, age, gender, phone, email, uName, password, DEPARTMENTID, ROLEID, MANAGERID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		DatabaseConnection dbConnection = new DatabaseConnection();
 
 		Connection connection = dbConnection.getConnection();
-		
+
+		if (rp.getManagerID() == null)
+
+		{
+
+			query = "INSERT INTO Employee (fName, lName, EmpID, Age, Gender , Phone, Email, uName, Password, DepartmentID, RoleID ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		}
+
 		try {
-			PreparedStatement prepObj = connection.prepareStatement(
-					("insert into employee("
-							+ "fname,lname,empID,age,gender,phone,email,uName,password"
-							+ ") "
-							+ "values(?,?,?,?,?,?,?,?,?)")
-					);
-			
+			PreparedStatement prepObj = connection.prepareStatement(query);
+
 			prepObj.setString(1, rp.getfName());
 			prepObj.setString(2, rp.getlName());
 			prepObj.setString(3, rp.getEmpID());
@@ -85,38 +102,49 @@ public class RegistrationServlet extends HttpServlet {
 			prepObj.setString(7, rp.getEmail());
 			prepObj.setString(8, rp.getuName());
 			prepObj.setString(9, rp.getPassword());
-			
-		      prepObj.executeQuery();
-		      
-		 PreparedStatement prepObj2 = connection.prepareStatement(
-				 ("insert into address("
-					+ "address1,address2,address3,city,zipcode,state,country,EmpID"
-					+ ") "
-					+ "values(?,?,?,?,?,?,?,?)")
-			);
-			
-		 prepObj2.setString(1, addressPojo.getAddress1());
-		 prepObj2.setString(2, addressPojo.getAddress2());
-		 prepObj2.setString(3, addressPojo.getAddress3());
-		 prepObj2.setString(4, addressPojo.getCity());
-		 prepObj2.setString(5, addressPojo.getZipCode());
-		 prepObj2.setString(6, addressPojo.getState());
-		 prepObj2.setString(7, addressPojo.getCountry());
-		 prepObj2.setString(8, rp.getEmpID());
-		 
-		 prepObj2.executeQuery();
+			prepObj.setString(10, rp.getDepartmentID());
+			prepObj.setString(11, rp.getRoleID());
+			if (rp.getManagerID() != null) {
+				prepObj.setString(12, rp.getManagerID());
+			}
+
+			prepObj.executeQuery();
+
+			RoleOperation roleOperation = new RoleOperation();
+
+			String roleName = roleOperation.getRoleByID(rp.getRoleID()).getRoleName();
+			if (roleName.equals("MANAGER")) {
+				PreparedStatement preparedStatement = connection
+						.prepareStatement("insert into manager (managerID) values(?)");
+				preparedStatement.setString(1, rp.getEmpID());
+				int i = preparedStatement.executeUpdate();
+				if (i > 0) {
+					System.out.println("Manager Inseted");
+				} else {
+					System.out.println("Manager not Inseted");
+				}
+			}
+
+			PreparedStatement prepObj2 = connection.prepareStatement(("insert into address("
+					+ "ADDRESSID,address,city,zipcode,state,country,EmpID" + ") " + "values(?,?,?,?,?,?,?)"));
+
+			prepObj2.setString(1, uuid.getID());
+			prepObj2.setString(2, address);
+			prepObj2.setString(3, addressPojo.getCity());
+			prepObj2.setString(4, addressPojo.getZipCode());
+			prepObj2.setString(5, addressPojo.getState());
+			prepObj2.setString(6, addressPojo.getCountry());
+			prepObj2.setString(7, rp.getEmpID());
+
+			prepObj2.executeQuery();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//request.getRequestDispatcher("Login.jsp").forward(request, response);
-		
-//	request.setAttribute("registerServletSubmit", "RegisterServlet");
-		//request.removeAttribute("submit");
+		request.setAttribute("checkIfRegistired", "true");
 		request.getRequestDispatcher("ControllerServlet?submit=RegisterServlet").forward(request, response);
-		
+
 	}
 
 }

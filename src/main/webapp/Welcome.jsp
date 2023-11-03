@@ -1,26 +1,94 @@
+<%@page import="com.velociter.ems.pojo.RolePojo"%>
 <%@page import="com.velociter.ems.helper.GetDesignations"%>
 <%@page import="com.velociter.ems.pojo.RegistrationPojo"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
+<%
+
+response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+
+response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+
+response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+
+response.setDateHeader("Expires", 0);
+
+ 
+
+if (null == session.getAttribute("empID")) {
+
+     response.sendRedirect("index.jsp");
+
+} else {
+
+%>
 <% 
 String empID = session.getAttribute("empID").toString();
+String roleName = request.getAttribute("roleName").toString();
+RolePojo rolePojo = new RolePojo();
 
-GetDesignations getDesignations = new GetDesignations();
-String empDesg = getDesignations.determineEmpDesignation(empID);
+//GetDesignations getDesignations = new GetDesignations();
+//String empDesg = getDesignations.determineEmpDesignation(empID);
 
 %>
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f2f2f2;
+	margin: 0;
+	padding: 20px;
+}
+
+h3, h4 {
+	text-align: center;
+}
+
+table {
+	margin: 20px auto;
+	border: 1px solid #000;
+	border-collapse: collapse;
+	width: 80%;
+}
+
+table td {
+	padding: 8px;
+	border: 1px solid #000;
+}
+
+.submit{
+	width: 160px; /* Adjusted width to fit the button text */
+	margin: 10px;
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 14px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+input[type="submit"]:hover {
+	background-color: #45a049;
+}
+</style>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
 <body>
-<form action="ControllerServlet" method="post">
+	<form action="ControllerServlet" method="post">
+	<jsp:include page="Header.jsp"></jsp:include>
 
+		<!-- <input type="submit" name="submit" value="Logout" class="logout-button">  -->
+	<!--  	<jsp:include page="Logout.jsp"></jsp:include> -->
 		<h3 align="center">
-			Welcome 
+			Welcome
 			<%
 		String fname = request.getAttribute("fName").toString();
 		out.println(fname);
@@ -32,7 +100,7 @@ String empDesg = getDesignations.determineEmpDesignation(empID);
 
 		<table align="center" border="1">
 
-			<input type="submit" name="submit" value="Logout">
+
 			<tr>
 				<td>First Name</td>
 				<td>
@@ -150,26 +218,47 @@ String empDesg = getDesignations.determineEmpDesignation(empID);
 				</td>
 			</tr>
 		</table>
-		<table  align="center">
+
+	</form>
+
+	<form action="ControllerServlet" method="post">
+
+		<table align="center">
+
 			<tr>
-				<td>
-				<% if(empDesg != null && empDesg.equals("ADMIN")) { %>
-				<input type="submit" name="submit" value="Add Manager" >
-				<% }
-				else if(empDesg != null && empDesg.equals("MANAGER")){
-				%>
-				<input type="submit" name="submit" value="Add Employee" >
-				<input type="submit" name="submit" value="Add Tasks" >
-				<%}
-				else if(empDesg != null && empDesg.equals("DEVELOPER") || empDesg.equals("TESTER")){
-				%>
-				<input type="submit" name="submit" value="Show Tasks">
-				<%} %>
-				
-				</td>
+
+				<%
+							
+                     if (roleName.equals("ADMIN")) {
+							
+                     %>
+
+				<td align="center"><input type="submit" name="submit"
+					value="Manage Roles" class="submit"></td>
+
+				<td align="center"><input type="submit" name="submit"
+					value="Manage Departments" class="submit"></td>
+
+
+
+				<%
+
+                     }
+
+                     %>
+
 			</tr>
+
 		</table>
+
+
+
 	</form>
 
 </body>
 </html>
+<%
+
+                     }
+
+                     %>

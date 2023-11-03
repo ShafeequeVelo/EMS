@@ -2,27 +2,35 @@ package com.velociter.ems.pojo;
 
 public class CityPojo {
 	
-	private String cityName = null;
-	private String stateID = null;
-	private String cityID = null;
-	
+	private String cityCode;
+	private String cityName;
+	private String countryCode;
+	private String stateCode;
+	public String getCityCode() {
+		return cityCode;
+	}
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
+	}
 	public String getCityName() {
 		return cityName;
 	}
 	public void setCityName(String cityName) {
 		this.cityName = cityName;
 	}
-	public String getStateID() {
-		return stateID;
+	public String getCountryCode() {
+		return countryCode;
 	}
-	public void setStateID(String stateID) {
-		this.stateID = stateID;
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
-	public String getCityID() {
-		return cityID;
+	public String getStateCode() {
+		return stateCode;
 	}
-	public void setCityID(String cityID) {
-		this.cityID = cityID;
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
 	}
+	
+
 
 }

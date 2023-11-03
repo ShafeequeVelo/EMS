@@ -11,12 +11,43 @@ import java.io.IOException;
  */
 public class ControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	// variables which contain names of jsp pages.
+	String loginJSP = "Login.jsp";
+	String registrationJSP = "Registration.jsp";
+	String welcomeJSP = "Welcome.jsp";
+	String employeeDesigJSP = "EmployeeDesignation.jsp";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public ControllerServlet() {
 		super();
+
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		// getting the parameter from jsp page into string variable.
+		String submit = request.getParameter("submit");
+		System.out.println("doGet");
+		System.out.println(submit);
+		// redirecting to login page
+		if (submit != null && submit.equals("Login Now")) {
+			response.sendRedirect(loginJSP);
+		}
+		if (submit != null && submit.equals("LoginServlet")) {
+			request.getRequestDispatcher("WelcomeServlet").forward(request, response);
+		}
+		else if (submit != null && submit.equals("WelcomeServlet")) {
+			request.getRequestDispatcher(welcomeJSP).forward(request, response);
+		}
+		else if (submit != null && submit.equals("ListDepartmentServlet")) {
+			request.getRequestDispatcher("ListAndCreateDepartment.jsp").forward(request, response);
+		}
+		else if (submit != null && submit.equals("ListRoleServlet")) {
+			request.getRequestDispatcher("ListAndCreateRole.jsp").forward(request, response);
+		}
 
 	}
 
@@ -28,12 +59,9 @@ public class ControllerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// getting the parameter from jsp page into string variable.
 		String submit = request.getParameter("submit");
+		System.out.println("doPost");
+		System.out.println(submit);
 
-		// variables which contain names of jsp pages.
-		String loginJSP = "Login.jsp";
-		String registrationJSP = "Registration.jsp";
-		String welcomeJSP = "Welcome.jsp";
-		String employeeDesigJSP = "EmployeeDesignation.jsp";
 
 		// redirecting to login page
 		if (submit != null && submit.equals("Login Now")) {
@@ -50,7 +78,7 @@ public class ControllerServlet extends HttpServlet {
 		}
 		// redirecting to login page
 		else if (submit != null && submit.equals("RegisterServlet")) {
-			response.sendRedirect(loginJSP);
+			request.getRequestDispatcher(loginJSP).forward(request, response);
 		}
 
 		// sending request to LoginServlet
@@ -58,9 +86,61 @@ public class ControllerServlet extends HttpServlet {
 			request.getRequestDispatcher("LoginServlet").forward(request, response);
 
 		}
-		// redirecting to welcome page.
+
+		// sending request to WelcomeServlet
 		else if (submit != null && submit.equals("LoginServlet")) {
+			request.getRequestDispatcher("WelcomeServlet").forward(request, response);
+
+		}
+
+		// sending request to WelcomeServlet
+		else if (submit != null && submit.equals("Back")) {
+			request.getRequestDispatcher("WelcomeServlet").forward(request, response);
+
+		}
+		// redirecting to welcome page.
+		else if (submit != null && submit.equals("WelcomeServlet")) {
 			request.getRequestDispatcher(welcomeJSP).forward(request, response);
+		}
+
+		// redirecting to ListRoleServlet.
+		else if (submit != null && submit.equals("Manage Roles")) {
+			request.getRequestDispatcher("ListRoleServlet").forward(request, response);
+		}
+
+		// redirecting to ListAndCreate page.
+		else if (submit != null && submit.equals("ListRoleServlet")) {
+			request.getRequestDispatcher("ListAndCreateRole.jsp").forward(request, response);
+		}
+
+		// redirecting to CreateRoleServlet.
+		else if (submit != null && submit.equals("Create Role")) {
+			request.getRequestDispatcher("CreateRoleServlet").forward(request, response);
+		}
+
+		// redirecting to ListRoleServlet.
+		else if (submit != null && submit.equals("CreateRoleServlet")) {
+			request.getRequestDispatcher("ListRoleServlet").forward(request, response);
+		}
+
+		// redirecting to ListDepartmentServlet.
+		else if (submit != null && submit.equals("Manage Departments")) {
+			request.getRequestDispatcher("ListDepartmentServlet").forward(request, response);
+		}
+
+		// redirecting to ListAndCreateDepartment page.
+		else if (submit != null && submit.equals("ListDepartmentServlet")) {
+			request.getRequestDispatcher("ListAndCreateDepartment.jsp").forward(request, response);
+		}
+
+		// redirecting to CreateDepartmentServlet.
+		else if (submit != null && submit.equals("Create Department")) {
+			request.getRequestDispatcher("CreateDepartmentServlet").forward(request, response);
+		}
+
+		// redirecting to ListDepartmentServlet.
+		else if (submit != null && submit.equals("CreateDepartmentServlet")) {
+			request.getRequestDispatcher("ListDepartmentServlet").forward(request, response);
 		}
 
 		// redirecting to EmployeeListServlet.
@@ -139,12 +219,8 @@ public class ControllerServlet extends HttpServlet {
 
 		// redirecting to LogoutServlet
 		else if (submit != null && submit.equals("Logout")) {
-			request.getRequestDispatcher("LogoutServlet").forward(request, response);
-		}
-
-		// redirecting to login page.
-		else if (submit != null && submit.equals("LogoutServlet")) {
-			request.getRequestDispatcher(loginJSP).forward(request, response);
+			// request.getRequestDispatcher("LogoutServlet").forward(request, response);
+			response.sendRedirect("LogoutServlet");
 		}
 
 	}
