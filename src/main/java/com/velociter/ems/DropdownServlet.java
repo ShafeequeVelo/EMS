@@ -25,8 +25,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "DropdownServlet", urlPatterns = { "/DropdownServlet" })
 public class DropdownServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	DatabaseConnection dbCon = new DatabaseConnection();
-	Connection connection = dbCon.getConnection();
+	Connection connection = DatabaseConnection.getConnection();
 
 	// Rest of the code remains the same...
 
@@ -110,7 +109,6 @@ public class DropdownServlet extends HttpServlet {
 				city.setCityCode(resultSet.getString("cityCode"));
 				city.setCityName(resultSet.getString("cityname"));
 				cities.add(city);
-				System.out.println(city.getCityName());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

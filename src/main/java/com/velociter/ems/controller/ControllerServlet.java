@@ -16,6 +16,7 @@ public class ControllerServlet extends HttpServlet {
 	String registrationJSP = "Registration.jsp";
 	String welcomeJSP = "Welcome.jsp";
 	String employeeDesigJSP = "EmployeeDesignation.jsp";
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -30,22 +31,17 @@ public class ControllerServlet extends HttpServlet {
 
 		// getting the parameter from jsp page into string variable.
 		String submit = request.getParameter("submit");
-		System.out.println("doGet");
-		System.out.println(submit);
 		// redirecting to login page
 		if (submit != null && submit.equals("Login Now")) {
 			response.sendRedirect(loginJSP);
 		}
 		if (submit != null && submit.equals("LoginServlet")) {
 			request.getRequestDispatcher("WelcomeServlet").forward(request, response);
-		}
-		else if (submit != null && submit.equals("WelcomeServlet")) {
+		} else if (submit != null && submit.equals("WelcomeServlet")) {
 			request.getRequestDispatcher(welcomeJSP).forward(request, response);
-		}
-		else if (submit != null && submit.equals("ListDepartmentServlet")) {
+		} else if (submit != null && submit.equals("ListDepartmentServlet")) {
 			request.getRequestDispatcher("ListAndCreateDepartment.jsp").forward(request, response);
-		}
-		else if (submit != null && submit.equals("ListRoleServlet")) {
+		} else if (submit != null && submit.equals("ListRoleServlet")) {
 			request.getRequestDispatcher("ListAndCreateRole.jsp").forward(request, response);
 		}
 
@@ -59,9 +55,6 @@ public class ControllerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// getting the parameter from jsp page into string variable.
 		String submit = request.getParameter("submit");
-		System.out.println("doPost");
-		System.out.println(submit);
-
 
 		// redirecting to login page
 		if (submit != null && submit.equals("Login Now")) {
@@ -102,6 +95,21 @@ public class ControllerServlet extends HttpServlet {
 		else if (submit != null && submit.equals("WelcomeServlet")) {
 			request.getRequestDispatcher(welcomeJSP).forward(request, response);
 		}
+
+		// redirecting to UpdatePassword.jsp.
+		else if (submit != null && submit.equals("Change Password")) {
+			request.getRequestDispatcher("UpdatePassword.jsp").forward(request, response);
+		}
+		
+		// redirecting to UpdatePasswordServlet.
+				else if (submit != null && submit.equals("UpdatePassword")) {
+					request.getRequestDispatcher("UpdatePasswordServlet").forward(request, response);
+				}
+		
+		// redirecting to UpdatePasswordServlet.
+				else if (submit != null && submit.equals("UpdatePasswordServlet")) {
+					request.getRequestDispatcher("WelcomeServlet").forward(request, response);
+				}
 
 		// redirecting to ListRoleServlet.
 		else if (submit != null && submit.equals("Manage Roles")) {

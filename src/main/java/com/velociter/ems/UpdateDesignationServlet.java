@@ -55,12 +55,12 @@ public class UpdateDesignationServlet extends HttpServlet {
 
 		int empID = Integer.parseInt(httpSession.getAttribute("empID").toString());
 
-		DatabaseConnection dbConnection = new DatabaseConnection();
-
-		Connection connection = dbConnection.getConnection();
+		Connection connection = DatabaseConnection.getConnection();
+		
+		PreparedStatement prepObj = null;
 
 		try {
-			PreparedStatement prepObj = connection
+			prepObj= connection
 					.prepareStatement(("insert into EMP_DESIGNATION( Designation,empID,manager_ID) values(?,?,?)"));
 
 			prepObj.setString(1, designationsPojo.getDesignation_Name());
@@ -74,6 +74,10 @@ public class UpdateDesignationServlet extends HttpServlet {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		
+		finally {
+			DatabaseConnection.closeCon(prepObj, connection);
 		}
 	}
 }

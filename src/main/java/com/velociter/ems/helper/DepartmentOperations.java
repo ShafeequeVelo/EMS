@@ -11,16 +11,17 @@ import com.velociter.ems.pojo.DepartmentPojo;
 
 
 public class DepartmentOperations {
-	DatabaseConnection dbConnection = new DatabaseConnection();
 
 	public DepartmentPojo getDepartmentByID(String departmentID) {
 		String getDepartment = "SELECT * FROM Department WHERE DEPARTMENTID=?";
 		DepartmentPojo department = new DepartmentPojo();
-		Connection connection = dbConnection.getConnection();
+		Connection connection = DatabaseConnection.getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
 		try {
-			PreparedStatement pstm = connection.prepareStatement(getDepartment);
+			pstm = connection.prepareStatement(getDepartment);
 			pstm.setString(1, departmentID);
-			ResultSet rs = pstm.executeQuery();
+			rs = pstm.executeQuery();
 			if (rs.next()) {
 				department.setDepartmentID(rs.getString("DEPARTMENTID"));
 				department.setDepartmentName(rs.getString("DepartmentName"));
@@ -29,6 +30,9 @@ public class DepartmentOperations {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		finally {
+			DatabaseConnection.closeCon(pstm, rs, connection);
+		}
 
 		return department;
 	}
@@ -36,10 +40,12 @@ public class DepartmentOperations {
 	public List<DepartmentPojo> getAllDepartments() {
 		List<DepartmentPojo> departments = new ArrayList<>();
 		String getRoles = "Select * from Department";
-		Connection connection = dbConnection.getConnection();
+		Connection connection = DatabaseConnection.getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
 		try {
-			PreparedStatement pstm = connection.prepareStatement(getRoles);
-			ResultSet rs = pstm.executeQuery();
+			pstm = connection.prepareStatement(getRoles);
+			rs = pstm.executeQuery();
 			while (rs.next()) {
 				DepartmentPojo department = new DepartmentPojo();
 				department.setDepartmentID(rs.getString("DepartmentID"));
@@ -50,15 +56,19 @@ public class DepartmentOperations {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		finally {
+			DatabaseConnection.closeCon(pstm, rs, connection);
+		}
 		return departments;
 	}
 
 	public int createDepartment(DepartmentPojo department) {
 		UUIDGenerator id = new UUIDGenerator();
 		String insertRole = "INSERT INTO Department (DepartmentID, DepartmentName) VALUES(?, ?)";
-		Connection connection = dbConnection.getConnection();
+		Connection connection = DatabaseConnection.getConnection();
+		PreparedStatement pstm = null;
 		try {
-			PreparedStatement pstm = connection.prepareStatement(insertRole);
+			pstm = connection.prepareStatement(insertRole);
 			pstm.setString(1, id.getID());
 			pstm.setString(2, department.getDepartmentName());
 			int i = pstm.executeUpdate();
@@ -67,6 +77,10 @@ public class DepartmentOperations {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		
+		finally {
+			DatabaseConnection.closeCon(pstm, connection);
 		}
 		return 0;
 	}

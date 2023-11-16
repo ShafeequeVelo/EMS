@@ -78,10 +78,13 @@ public class RegistrationServlet extends HttpServlet {
 
 		String query = "INSERT INTO employee (fname, lname, EmpID, age, gender, phone, email, uName, password, DEPARTMENTID, ROLEID, MANAGERID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		DatabaseConnection dbConnection = new DatabaseConnection();
-
-		Connection connection = dbConnection.getConnection();
-
+		Connection connection = DatabaseConnection.getConnection();
+		
+		PreparedStatement prepObj = null;
+		
+		PreparedStatement prepObj2 = null;
+		
+		
 		if (rp.getManagerID() == null)
 
 		{
@@ -91,7 +94,7 @@ public class RegistrationServlet extends HttpServlet {
 		}
 
 		try {
-			PreparedStatement prepObj = connection.prepareStatement(query);
+			prepObj = connection.prepareStatement(query);
 
 			prepObj.setString(1, rp.getfName());
 			prepObj.setString(2, rp.getlName());
@@ -125,7 +128,7 @@ public class RegistrationServlet extends HttpServlet {
 				}
 			}
 
-			PreparedStatement prepObj2 = connection.prepareStatement(("insert into address("
+			prepObj2 = connection.prepareStatement(("insert into address("
 					+ "ADDRESSID,address,city,zipcode,state,country,EmpID" + ") " + "values(?,?,?,?,?,?,?)"));
 
 			prepObj2.setString(1, uuid.getID());
@@ -141,6 +144,10 @@ public class RegistrationServlet extends HttpServlet {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally {
+			DatabaseConnection.closeCon(prepObj, connection);
+			DatabaseConnection.closeCon(prepObj2, connection);
 		}
 		request.setAttribute("checkIfRegistired", "true");
 		request.getRequestDispatcher("ControllerServlet?submit=RegisterServlet").forward(request, response);

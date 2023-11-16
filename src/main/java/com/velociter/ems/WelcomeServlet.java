@@ -53,17 +53,22 @@ public class WelcomeServlet extends HttpServlet {
 		} else {
 			String empID = (String) session.getAttribute("empID");
 
-			DatabaseConnection dbConnection = new DatabaseConnection();
 
-			Connection connection = dbConnection.getConnection();
+			Connection connection = DatabaseConnection.getConnection();
+			
+			PreparedStatement statement = null;
+			
+			ResultSet resultSet = null;
+			
+			ResultSet resultSet2 = null;
 
 			try {
 
-				PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee WHERE EMPID = ?");
+				statement = connection.prepareStatement("SELECT * FROM employee WHERE EMPID = ?");
 
 				statement.setString(1, empID);
 
-				ResultSet resultSet = statement.executeQuery();
+				resultSet = statement.executeQuery();
 
 				if (resultSet.next()) {
 					// Successful login - redirect to a secure page
@@ -96,7 +101,7 @@ public class WelcomeServlet extends HttpServlet {
 					PreparedStatement statement2 = connection.prepareStatement("SELECT * FROM address WHERE EmpID = ?");
 					statement2.setString(1, empID);
 
-					ResultSet resultSet2 = statement2.executeQuery();
+					resultSet2 = statement2.executeQuery();
 
 					if (resultSet2.next()) {
 						String address1 = resultSet2.getString("address");
@@ -118,11 +123,19 @@ public class WelcomeServlet extends HttpServlet {
 
 					HttpSession httpSession = request.getSession();
 					httpSession.setAttribute("empID", empID);
+					httpSession.setAttribute("fName", fName);
+					httpSession.setAttribute("lName", lName);
+					
 
 					request.getRequestDispatcher("ControllerServlet?submit=WelcomeServlet").forward(request, response);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+			}
+			
+			finally {
+				DatabaseConnection.closeCon(statement, resultSet, connection);
+				DatabaseConnection.closeCon(statement, resultSet2, connection);
 			}
 		}
 	}

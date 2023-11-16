@@ -70,7 +70,9 @@ List<RolePojo> roles = (List<RolePojo>) session.getAttribute("roles");
     input[type="submit"]:hover {
         background-color: #45a049;
     }
-    
+    .content{
+	padding-top: 60px;
+}
 
 </style>
 
@@ -81,6 +83,7 @@ List<RolePojo> roles = (List<RolePojo>) session.getAttribute("roles");
 <body>
 	    
 <jsp:include page="Header.jsp"></jsp:include>
+<div class="content">
 
 <!--<jsp:include page="Logout.jsp"></jsp:include> -->
 
@@ -118,6 +121,7 @@ List<RolePojo> roles = (List<RolePojo>) session.getAttribute("roles");
 	</table>
 	</form>
 	<form action="ControllerServlet" method="post"><input type="submit" name="submit" value="Back" class="submit"></form>
+</div>
 </body>
 </html>
 <% 

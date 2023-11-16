@@ -12,13 +12,13 @@ import com.velociter.ems.pojo.StatePojo;
 
 public class GetStateCity {
 
-	DatabaseConnection dbConnection = new DatabaseConnection();
-
-
-
 	public List<String> getState() {
 
-        Connection connection = dbConnection.getConnection();
+        Connection connection = DatabaseConnection.getConnection();
+        
+        PreparedStatement  preparedStatement = null;
+        
+        ResultSet rs = null;
 
         List<String> stateList = new ArrayList<String>();
 
@@ -26,9 +26,9 @@ public class GetStateCity {
 
 
 
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM STATES");
+             preparedStatement = connection.prepareStatement("SELECT * FROM STATES");
 
-             ResultSet rs = preparedStatement.executeQuery();
+             rs = preparedStatement.executeQuery();
 
              StatePojo state = new StatePojo();
 
@@ -52,18 +52,9 @@ public class GetStateCity {
 
         } finally {
 
-             if (connection != null) {
-
-                  System.out.print("in finally, in GetStateCity.java");
-
-             }
+        	DatabaseConnection.closeCon(preparedStatement, rs, connection);
 
         }
-
- 
-
-       
-
         return stateList;
 
 
@@ -71,7 +62,11 @@ public class GetStateCity {
   }
 	public List<String> getCities(String stateName) {
 
-		Connection connection = dbConnection.getConnection();
+		Connection connection = DatabaseConnection.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		ResultSet rs = null;
 
 		List<String> citieList = new ArrayList<String>();
 
@@ -79,11 +74,11 @@ public class GetStateCity {
 
 
 
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM City where state_name=?");
+			ps = connection.prepareStatement("SELECT * FROM City where state_name=?");
 
 			ps.setString(1, stateName);
 
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 
 			CityPojo city = new CityPojo();
 
@@ -102,6 +97,9 @@ public class GetStateCity {
 
 			e.printStackTrace();
 
+		}
+		finally {
+			DatabaseConnection.closeCon(ps, rs, connection);
 		}
 		return citieList; 
 	}

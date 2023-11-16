@@ -35,11 +35,8 @@ public class ManagerServlet extends HttpServlet {
 
      private static final long serialVersionUID = 1L;
 
- 
 
-     DatabaseConnection dbConnection = new DatabaseConnection();
-
-     Connection connection = dbConnection.getConnection();
+     Connection connection = DatabaseConnection.getConnection();
 
  
 
@@ -78,20 +75,28 @@ public class ManagerServlet extends HttpServlet {
            String query = "SELECT * FROM manager";
 
            String nameOfManager = "SELECT fname, lname FROM employee WHERE EmpID =?";
+           
+           PreparedStatement pstm = null;
+           
+           PreparedStatement pstm2 = null;
+           
+           ResultSet rs = null;
+           
+           ResultSet rs2 = null;
 
            try {
 
-                PreparedStatement pstm = connection.prepareStatement(query);
+                pstm = connection.prepareStatement(query);
 
-                ResultSet rs = pstm.executeQuery();
+                rs = pstm.executeQuery();
 
                 while (rs.next()) {
 
-                     PreparedStatement pstm2 = connection.prepareStatement(nameOfManager);
+                     pstm2 = connection.prepareStatement(nameOfManager);
 
                      pstm2.setString(1, rs.getString("managerid"));
 
-                     ResultSet rs2 = pstm2.executeQuery();
+                     rs2 = pstm2.executeQuery();
 
                      if (rs2.next()) {
 
@@ -112,6 +117,11 @@ public class ManagerServlet extends HttpServlet {
                 e.printStackTrace();
 
            }
+           
+           finally {
+			DatabaseConnection.closeCon(pstm, rs, connection);
+			DatabaseConnection.closeCon(pstm2, rs2, connection);
+		}
 
            return managers;
 

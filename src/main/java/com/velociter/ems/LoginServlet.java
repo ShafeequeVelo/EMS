@@ -60,18 +60,22 @@ public class LoginServlet extends HttpServlet {
 		rp.setPassword(request.getParameter("password"));
 
 
-		DatabaseConnection dbconnection = new DatabaseConnection();
 		
 		HttpSession session = request.getSession();
 
-		Connection connection = dbconnection.getConnection();
+		Connection connection = DatabaseConnection.getConnection();
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement("SELECT EMPID FROM EMPLOYEE WHERE uName= ? and password = ?");
+			preparedStatement = connection.prepareStatement("SELECT EMPID FROM EMPLOYEE WHERE uName= ? and password = ?");
 			
 			preparedStatement.setString(1, rp.getuName());
 			preparedStatement.setString(2, rp.getPassword());
 			
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 			
 			if(resultSet.next()) {
 				
@@ -89,6 +93,10 @@ public class LoginServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 
+		}
+		
+		finally {
+			DatabaseConnection.closeCon(preparedStatement, resultSet, connection);
 		}
 
 	}

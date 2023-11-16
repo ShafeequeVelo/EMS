@@ -16,13 +16,17 @@ public class RoleOperation {
 		
 		Connection connection = dbConnection.getConnection();
 		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
 		String query = "SELECT ROLEID FROM ROLE WHERE ROLENAME = ?";
 		String query2 = "SELECT EMPID FROM EMPLOYEE WHERE ROLEID=?";
 		
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, "ADMIN");
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 			
 			if(resultSet.next()) {
 				String roleIDAdmin = resultSet.getString("ROLEID");
@@ -37,6 +41,10 @@ public class RoleOperation {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		finally {
+			DatabaseConnection.closeCon(preparedStatement, resultSet, connection);
+		}
 		return false;
 		
 	}
@@ -45,10 +53,12 @@ public class RoleOperation {
 		String getRole = "SELECT * FROM ROLE WHERE ROLEID=?";
 		RolePojo role = new RolePojo();
 		Connection connection = dbConnection.getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
 		try {
-			PreparedStatement pstm = connection.prepareStatement(getRole);
+			pstm = connection.prepareStatement(getRole);
 			pstm.setString(1, roleID);
-			ResultSet rs = pstm.executeQuery();
+			rs = pstm.executeQuery();
 			if (rs.next()) {
 				role.setRoleID(rs.getString("RoleID"));
 				role.setRoleName(rs.getString("RoleName"));
@@ -56,6 +66,10 @@ public class RoleOperation {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		
+		finally {
+			DatabaseConnection.closeCon(pstm, rs, connection);
 		}
 
 		return role;
@@ -65,9 +79,11 @@ public class RoleOperation {
 		List<RolePojo> roles = new ArrayList<RolePojo>();
 		String getRoles = "Select * from Role";
 		Connection connection = dbConnection.getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
 		try {
-			PreparedStatement pstm = connection.prepareStatement(getRoles);
-			ResultSet rs = pstm.executeQuery();
+			pstm = connection.prepareStatement(getRoles);
+			rs = pstm.executeQuery();
 			while (rs.next()) {
 				RolePojo role = new RolePojo();
 				role.setRoleID(rs.getString("RoleID"));
@@ -78,6 +94,9 @@ public class RoleOperation {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		finally {
+			DatabaseConnection.closeCon(pstm, rs, connection);
+		}
 		return roles;
 	}
 
@@ -85,8 +104,9 @@ public class RoleOperation {
 		UUIDGenerator id = new UUIDGenerator();
 		String insertRole = "INSERT INTO role (RoleID, RoleName) VALUES(?, ?)";
 		Connection connection = dbConnection.getConnection();
+		PreparedStatement pstm = null;
 		try {
-			PreparedStatement pstm = connection.prepareStatement(insertRole);
+			pstm = connection.prepareStatement(insertRole);
 			pstm.setString(1, id.getID());
 			pstm.setString(2, role.getRoleName());
 			int i = pstm.executeUpdate();
@@ -94,7 +114,10 @@ public class RoleOperation {
 				return i;
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
+			e.printStackTrace();
+		}
+		finally {
+			DatabaseConnection.closeCon(pstm, connection);
 		}
 		return 0;
 	}

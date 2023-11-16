@@ -15,19 +15,22 @@ import oracle.net.aso.p;
 
 public class GetDesignations {
 
-	DatabaseConnection dbConnection = new DatabaseConnection();
 
 	public List<String> getDesignations() {
 
-		Connection connection = dbConnection.getConnection();
+		Connection connection = DatabaseConnection.getConnection();
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
 
 		List<String> designationList = new ArrayList<String>();
 
 		try {
 
-			PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM DESIGNATIONS");
+			preparedStatement = connection.prepareStatement("SELECT * FROM DESIGNATIONS");
 
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 
 			DesignationsPojo designationsPojo = new DesignationsPojo();
 
@@ -47,12 +50,8 @@ public class GetDesignations {
 			e.printStackTrace();
 
 		} finally {
-
-			if (connection != null) {
-
-				System.out.print("in finally, in getDesignations");
-
-			}
+			
+			DatabaseConnection.closeCon(preparedStatement, resultSet, connection);
 
 		}
 
@@ -62,15 +61,19 @@ public class GetDesignations {
 	
 	public List<String> getDesignationForAdmin() {
 
-		Connection connection = dbConnection.getConnection();
+		Connection connection = DatabaseConnection.getConnection();
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
 
 		List<String> designationList = new ArrayList<String>();
 
 		try {
 
-			PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM DESIGNATIONS WHERE DESIGNATION_ID = 2");
+			preparedStatement = connection.prepareStatement("SELECT * FROM DESIGNATIONS WHERE DESIGNATION_ID = 2");
 
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 
 			DesignationsPojo designationsPojo = new DesignationsPojo();
 
@@ -90,11 +93,7 @@ public class GetDesignations {
 
 		} finally {
 
-			if (connection != null) {
-
-				System.out.print("in finally, in getDesignationForAdmin");
-
-			}
+			DatabaseConnection.closeCon(preparedStatement, resultSet, connection);
 
 		}
 
@@ -104,15 +103,19 @@ public class GetDesignations {
 	
 	public List<RegistrationPojo> getManagers(){
 		
-		Connection connection = dbConnection.getConnection();
+		Connection connection = DatabaseConnection.getConnection();
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
 
 		List<RegistrationPojo> managerList = new ArrayList<RegistrationPojo>();
 		
 		try {
 			
-			PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM EMP_DESIGNATION WHERE manager_ID = 1");
+			preparedStatement = connection.prepareStatement("SELECT * FROM EMP_DESIGNATION WHERE manager_ID = 1");
 			
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 			
 			while (resultSet.next()) {
 
@@ -136,6 +139,9 @@ public class GetDesignations {
              e.printStackTrace();
 
         }
+		finally {
+			DatabaseConnection.closeCon(preparedStatement, resultSet, connection);
+		}
 		
 		return null;
 		
@@ -144,17 +150,21 @@ public class GetDesignations {
 
 		public RegistrationPojo getEmpByID(String ID) {
 			
-			Connection connection = dbConnection.getConnection();
+			Connection connection = DatabaseConnection.getConnection();
+			
+			PreparedStatement preparedStatement = null;
+			
+			ResultSet resultSet = null;
 			
            RegistrationPojo registrationPojo = new RegistrationPojo();
            
            try {
 
-                PreparedStatement preparedStatement = connection.prepareStatement("select * from Employee where empID = ?");
+                preparedStatement = connection.prepareStatement("select * from Employee where empID = ?");
 
                 preparedStatement.setString(1, ID);
 
-                ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet = preparedStatement.executeQuery();
 
                 if (resultSet.next()) {
 
@@ -192,21 +202,29 @@ public class GetDesignations {
                 e.printStackTrace();
 
            }
+           
+           finally {
+        	   DatabaseConnection.closeCon(preparedStatement, resultSet, connection);
+		}
 		return null; 
  
 		}
 	
 		public List<String> getDesignationForManager() {
 
-			Connection connection = dbConnection.getConnection();
+			Connection connection = DatabaseConnection.getConnection();
+			
+			PreparedStatement preparedStatement = null;
+			
+			ResultSet resultSet = null;
 
 			List<String> designationList = new ArrayList<String>();
 
 			try {
 
-				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM DESIGNATIONS WHERE DESIGNATION_ID > 2");
+				preparedStatement = connection.prepareStatement("SELECT * FROM DESIGNATIONS WHERE DESIGNATION_ID > 2");
 
-				ResultSet resultSet = preparedStatement.executeQuery();
+				resultSet = preparedStatement.executeQuery();
 
 				DesignationsPojo designationsPojo = new DesignationsPojo();
 
@@ -226,11 +244,7 @@ public class GetDesignations {
 
 			} finally {
 
-				if (connection != null) {
-
-					System.out.print("in finally, in getDesignationForManager");
-
-				}
+				DatabaseConnection.closeCon(preparedStatement, resultSet, connection);
 
 			}
 
@@ -240,7 +254,7 @@ public class GetDesignations {
 		
 		public String determineEmpDesignation(String empID) throws SQLException {
 			
-			Connection connection = dbConnection.getConnection();
+			Connection connection = DatabaseConnection.getConnection();
 			
 			DesignationsPojo designationsPojo = new DesignationsPojo();
 			
@@ -264,23 +278,31 @@ public class GetDesignations {
 				e.printStackTrace();
 			}
 			
+			finally {
+				DatabaseConnection.closeCon(preparedStatement, resultSet, connection);
+			}
+			
 			return empDesgination;
 			
 		}
 		
 		public List<RegistrationPojo> getEmpForMgr(String ID){
 			
-			Connection connection = dbConnection.getConnection();
+			Connection connection = DatabaseConnection.getConnection();
+			
+			PreparedStatement preparedStatement = null;
+			
+			ResultSet resultSet = null;
 
 			List<RegistrationPojo> managerList = new ArrayList<RegistrationPojo>();
 			
 			try {
 				
-				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM EMP_DESIGNATION WHERE manager_ID = ?");
+				preparedStatement = connection.prepareStatement("SELECT * FROM EMP_DESIGNATION WHERE manager_ID = ?");
 				
 				preparedStatement.setString(1, ID);
 				
-				ResultSet resultSet = preparedStatement.executeQuery();
+				resultSet = preparedStatement.executeQuery();
 				
 				while (resultSet.next()) {
 
@@ -304,6 +326,10 @@ public class GetDesignations {
 	             e.printStackTrace();
 
 	        }
+			
+			finally {
+				DatabaseConnection.closeCon(preparedStatement, resultSet, connection);
+			}
 			
 			return null;
 			

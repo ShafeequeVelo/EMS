@@ -209,4 +209,24 @@
     <servlet-name>DropdownServlet</servlet-name>
     <url-pattern>/DropdownServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>CheckZipcodeServlet</display-name>
+    <servlet-name>CheckZipcodeServlet</servlet-name>
+    <servlet-class>com.velociter.ems.CheckZipcodeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CheckZipcodeServlet</servlet-name>
+    <url-pattern>/CheckZipcodeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>UpdatePasswordServlet</display-name>
+    <servlet-name>UpdatePasswordServlet</servlet-name>
+    <servlet-class>com.velociter.ems.UpdatePasswordServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdatePasswordServlet</servlet-name>
+    <url-pattern>/UpdatePasswordServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
